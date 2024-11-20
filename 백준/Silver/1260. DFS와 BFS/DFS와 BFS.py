@@ -1,36 +1,41 @@
 from collections import deque
 
-def dfs(v):
-  visit_list2[v] = 1        
-  print(v, end = " ")
-  for i in range(1, N + 1):
-    if visit_list2[i] == 0 and check[v][i] == 1:
-      dfs(i)
+def DFS(x):
+    DFS_result.append(x)
+    
+    for y in range(N + 1):
+        if g[x][y] == 1 and y not in DFS_result:
+            DFS(y)
 
-def bfs(v):
-  q = deque()
-  q.append(v)       
-  visit_list[v] = 1   
-  while q:
-    v = q.popleft()
-    print(v, end = " ")
-    for i in range(1, N + 1):
-      if visit_list[i] == 0 and check[v][i] == 1:
-        q.append(i)
-        visit_list[i] = 1
+    return
+
+def BFS(s):
+    q = deque()
+    q.append(s)
+    BFS_result.append(s)
+
+    while q:
+        cx = q.popleft()
+
+        for cy in range(N + 1):
+            if g[cx][cy] == 1 and cy not in BFS_result:
+                q.append(cy)
+                BFS_result.append(cy)
 
 N, M, V = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(M)]
 
-check = [[0] * (N + 1) for _ in range(N + 1)]
+g = [[0] * (N + 1) for _ in range(N + 1)]
 
-for x, y in arr:
-    check[x][y] = 1
-    check[y][x] = 1
+for _ in range(M):
+    u, v = map(int, input().split())
+    g[u][v] = 1
+    g[v][u] = 1
 
-visit_list = [0] * (N + 1)
-visit_list2 = [0] * (N + 1)
+DFS_result = []
+BFS_result = []
 
-dfs(V)
-print()
-bfs(V)
+DFS(V)
+BFS(V)
+
+print(" ".join(map(str, DFS_result)))
+print(" ".join(map(str, BFS_result)))
